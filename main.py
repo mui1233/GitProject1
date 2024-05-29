@@ -27,7 +27,7 @@ score = 0
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
 start_game = False
-blit_proj = False
+blit_proj_list = []
 projectiles = []
 right = False
 directions = []
@@ -36,6 +36,10 @@ alive = True
 # -------- Main Program Loop -----------
 while run:
 
+    for proj in projectiles:
+        if proj.rect.colliderect(e.rect):
+            alive = False
+            blit_proj_list[projectiles.index(proj)] = False
 
     if start_game:
         keys = pygame.key.get_pressed()  # checking pressed keys
@@ -60,19 +64,17 @@ while run:
             message_display = my_font.render(message, True, (255, 255, 255))
         if start_game == True:
             if event.type == pygame.MOUSEBUTTONUP:
-                blit_proj = True
                 proj = Projectile(f.x, f.y)
                 projectiles.append(proj)
+                blit_proj_list.append(True)
                 if f.current_direction == 'right':
                     right = True
                     directions.append(right)
                 elif f.current_direction == 'left':
                     right = False
                     directions.append(right)
-                print(projectiles)
                 e = Enemy(400, 400)
-                if pygame.Rect.colliderect(e, proj):
-                    alive = False
+
 
     if start_game:
         score_display = my_font.render(f"Points: {score}", True, (255, 255, 255))
@@ -84,14 +86,15 @@ while run:
         if alive:
             screen.blit(e.image, e.rect)
 
-        if blit_proj:
-            for p in projectiles:
+
+        for p in projectiles:
+            if blit_proj_list[projectiles.index(p)]:
                 screen.blit(p.image, p.rect)
-            for p in projectiles:
-                if directions[projectiles.index(p)]:
-                    p.move_right()
-                else:
-                    p.move_left()
+        for p in projectiles:
+            if directions[projectiles.index(p)]:
+                p.move_right()
+            else:
+                p.move_left()
 
         pygame.display.update()
     else:
@@ -101,6 +104,3 @@ while run:
 
 # Once we have exited the main program loop we can stop the game engine:
 pygame.quit()
-
-
-
