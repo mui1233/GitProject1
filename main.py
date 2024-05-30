@@ -7,7 +7,7 @@ import random
 pygame.init()
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 15)
-pygame.display.set_caption("Coin Collector!")
+pygame.display.set_caption("Defend the Flag")
 
 # set up variables for the display
 SCREEN_HEIGHT = 700
@@ -15,7 +15,7 @@ SCREEN_WIDTH = 900
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
 
-message = "Collision not detected"
+message = "Defend the Flag"
 r = 50
 g = 0
 b = 100
@@ -40,6 +40,7 @@ while run:
         if proj.rect.colliderect(e.rect):
             alive = False
             blit_proj_list[projectiles.index(proj)] = False
+
 
     if start_game:
         keys = pygame.key.get_pressed()  # checking pressed keys
@@ -73,7 +74,10 @@ while run:
                 elif f.current_direction == 'left':
                     right = False
                     directions.append(right)
-                e = Enemy(400, 400)
+                if alive:
+                    e = Enemy(400, 200)
+                else:
+                    e = Enemy(5000, 5000)
 
 
     if start_game:
@@ -86,11 +90,9 @@ while run:
         if alive:
             screen.blit(e.image, e.rect)
 
-
         for p in projectiles:
             if blit_proj_list[projectiles.index(p)]:
                 screen.blit(p.image, p.rect)
-        for p in projectiles:
             if directions[projectiles.index(p)]:
                 p.move_right()
             else:
