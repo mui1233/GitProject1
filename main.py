@@ -32,14 +32,23 @@ projectiles = []
 right = False
 directions = []
 health = 100
-alive = True
+enemy_list = []
+alive_list = []
 # -------- Main Program Loop -----------
 while run:
 
+
+    e1 = Enemy(400, 200)
+    e2 = Enemy(400, 300)
+    e3 = Enemy(400, 400)
+    enemy_list.extend((e1, e2, e3))
+    alive_list.extend((True, True, True))
+
     for proj in projectiles:
-        if proj.rect.colliderect(e.rect):
-            alive = False
-            blit_proj_list[projectiles.index(proj)] = False
+        for e in enemy_list:
+            if proj.rect.colliderect(e.rect) and alive_list[enemy_list.index(e)]:
+                alive_list[enemy_list.index(e)] = False
+                blit_proj_list[projectiles.index(proj)] = False
 
 
     if start_game:
@@ -74,10 +83,6 @@ while run:
                 elif f.current_direction == 'left':
                     right = False
                     directions.append(right)
-                if alive:
-                    e = Enemy(400, 200)
-                else:
-                    e = Enemy(5000, 5000)
 
 
     if start_game:
@@ -87,8 +92,10 @@ while run:
 
         screen.blit(display_message, (0, 15))
         screen.blit(f.image, f.rect)
-        if alive:
-            screen.blit(e.image, e.rect)
+
+        for a in alive_list:
+            if a:
+                screen.blit(enemy_list[alive_list.index(a)].eimage, enemy_list[alive_list.index(a)].rect)
 
         for p in projectiles:
             if blit_proj_list[projectiles.index(p)]:
