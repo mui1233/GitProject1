@@ -1,8 +1,9 @@
+
 import pygame
 from fox import Fox
 from projectile import Projectile
 from enemy import Enemy
-import random
+import time
 # set up pygame modules
 pygame.init()
 pygame.font.init()
@@ -32,17 +33,17 @@ projectiles = []
 right = False
 directions = []
 health = 100
+
+e1 = Enemy(400, 200)
+e2 = Enemy(400, 300)
+e3 = Enemy(400, 400)
 enemy_list = []
+enemy_list.extend((e1, e2, e3))
 alive_list = []
+alive_list.extend((True, True, True))
+move_time = 1
 # -------- Main Program Loop -----------
 while run:
-
-
-    e1 = Enemy(400, 200)
-    e2 = Enemy(400, 300)
-    e3 = Enemy(400, 400)
-    enemy_list.extend((e1, e2, e3))
-    alive_list.extend((True, True, True))
 
     for proj in projectiles:
         for e in enemy_list:
@@ -72,8 +73,11 @@ while run:
             start_game = True
             message = "Click to play!"
             message_display = my_font.render(message, True, (255, 255, 255))
-        if start_game == True:
+            start_time = time.time()
+
+        if start_game:
             if event.type == pygame.MOUSEBUTTONUP:
+
                 proj = Projectile(f.x, f.y)
                 projectiles.append(proj)
                 blit_proj_list.append(True)
@@ -86,16 +90,31 @@ while run:
 
 
     if start_game:
-        score_display = my_font.render(f"Points: {score}", True, (255, 255, 255))
         screen.fill((r, g, b))
+
+        elapsed_time = time.time() - start_time
+        elapsed_time //= 1
+        elapsed_time = int(elapsed_time)
+        time_display = my_font.render(f"Time: {elapsed_time}", True, (255, 255, 255))
+        if elapsed_time == move_time:
+            move_time += 2
+            for e in enemy_list:
+                e.move_left()
+        screen.blit(time_display, (0, 0))
+
+        score_display = my_font.render(f"Points: {score}", True, (255, 255, 255))
+
+
         screen.blit(score_display, (0, 30))
 
         screen.blit(display_message, (0, 15))
         screen.blit(f.image, f.rect)
 
-        for a in alive_list:
-            if a:
-                screen.blit(enemy_list[alive_list.index(a)].eimage, enemy_list[alive_list.index(a)].rect)
+
+        for i in range(len(alive_list)):
+            if alive_list[i]:
+                screen.blit(enemy_list[i].image, enemy_list[i].rect)
+
 
         for p in projectiles:
             if blit_proj_list[projectiles.index(p)]:

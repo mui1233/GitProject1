@@ -9,6 +9,18 @@ class Enemy:
         self.image = pygame.image.load("blue-fox-sprite.png")
         self.image_size = self.image.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
-        self.delta = .1
+        self.delta = 5
         self.current_direction = "right"
         self.health = 100
+
+    def move_right(self):
+        self.x += self.delta
+        self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+
+    def move_left(self):
+        self.x -= self.delta
+        self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
+
+    def shift_side(self):
+        self.image = pygame.transform.flip(self.image, True, False)
+
