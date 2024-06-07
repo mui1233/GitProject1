@@ -33,7 +33,7 @@ projectiles = []
 right = False
 directions = []
 health = 100
-
+shoot = True
 e1 = Enemy(400, 200)
 e2 = Enemy(400, 300)
 e3 = Enemy(400, 400)
@@ -42,6 +42,8 @@ enemy_list.extend((e1, e2, e3))
 alive_list = []
 alive_list.extend((True, True, True))
 move_time = 1
+shift_left = False
+shift_right = False
 # -------- Main Program Loop -----------
 while run:
 
@@ -96,13 +98,14 @@ while run:
         elapsed_time //= 1
         elapsed_time = int(elapsed_time)
         time_display = my_font.render(f"Time: {elapsed_time}", True, (255, 255, 255))
+
         if elapsed_time == move_time:
-            move_time += 2
+            move_time += 1
             for e in enemy_list:
                 e.move_left()
         screen.blit(time_display, (0, 0))
 
-        score_display = my_font.render(f"Points: {score}", True, (255, 255, 255))
+        score_display = my_font.render(f"Points: {score}s", True, (255, 255, 255))
 
 
         screen.blit(score_display, (0, 30))
@@ -113,8 +116,15 @@ while run:
 
         for i in range(len(alive_list)):
             if alive_list[i]:
-                screen.blit(enemy_list[i].image, enemy_list[i].rect)
+                if f.x < enemy_list[i].x:
+                    enemy_list[i].shift_side("left")
 
+                    screen.blit(enemy_list[i].image, enemy_list[i].rect)
+
+                else:
+                    enemy_list[i].shift_side("right")
+
+                    screen.blit(enemy_list[i].image, enemy_list[i].rect)
 
         for p in projectiles:
             if blit_proj_list[projectiles.index(p)]:
