@@ -23,7 +23,7 @@ b = 100
 # render the text for later
 display_message = my_font.render(message, True, (255, 255, 255))
 
-f = Fox(40, 60)
+f = Fox(200, 60)
 score = 0
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
@@ -34,13 +34,16 @@ right = False
 directions = []
 health = 100
 shoot = True
-e1 = Enemy(400, 200)
-e2 = Enemy(400, 300)
-e3 = Enemy(400, 400)
+e1 = Enemy(800, 200)
+e2 = Enemy(800, 300)
+e3 = Enemy(800, 400)
+e4 = Enemy(100, 200)
+e5 = Enemy(100, 300)
+e6 = Enemy(100, 400)
 enemy_list = []
-enemy_list.extend((e1, e2, e3))
+enemy_list.extend((e1, e2, e3, e4, e5, e6))
 alive_list = []
-alive_list.extend((True, True, True))
+alive_list.extend((True, True, True, True, True, True))
 move_time = 1
 shift_left = False
 shift_right = False
@@ -97,12 +100,15 @@ while run:
         elapsed_time = time.time() - start_time
         elapsed_time //= 1
         elapsed_time = int(elapsed_time)
-        time_display = my_font.render(f"Time: {elapsed_time}", True, (255, 255, 255))
+        time_display = my_font.render(f"Time: {elapsed_time}s", True, (255, 255, 255))
 
         if elapsed_time == move_time:
             move_time += 1
             for e in enemy_list:
-                e.move_left()
+                if f.x < e.x:
+                    e.move_left()
+                if f.x > e.x:
+                    e.move_right()
         screen.blit(time_display, (0, 0))
 
         score_display = my_font.render(f"Points: {score}s", True, (255, 255, 255))
@@ -116,13 +122,13 @@ while run:
 
         for i in range(len(alive_list)):
             if alive_list[i]:
-                if f.x < enemy_list[i].x:
-                    enemy_list[i].shift_side("left")
+                if f.x > enemy_list[i].rect.x:
+                    enemy_list[i].update_image(True)  # Face right
 
                     screen.blit(enemy_list[i].image, enemy_list[i].rect)
 
                 else:
-                    enemy_list[i].shift_side("right")
+                    enemy_list[i].update_image(False)
 
                     screen.blit(enemy_list[i].image, enemy_list[i].rect)
 
