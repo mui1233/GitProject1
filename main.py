@@ -8,20 +8,21 @@ import time
 pygame.init()
 pygame.font.init()
 my_font = pygame.font.SysFont('Arial', 15)
+big_font = pygame.font.SysFont('Arial', 40)
 pygame.display.set_caption("Defend the Flag")
 
 # set up variables for the display
-SCREEN_HEIGHT = 700
-SCREEN_WIDTH = 900
+SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 1500
 size = (SCREEN_WIDTH, SCREEN_HEIGHT)
 screen = pygame.display.set_mode(size)
 
-message = "Defend the Flag"
+message = "Survival"
 r = 50
 g = 0
 b = 100
 # render the text for later
-display_message = my_font.render(message, True, (255, 255, 255))
+display_message = big_font.render(message, True, (255, 255, 255))
 
 f = Fox(200, 60)
 score = 0
@@ -34,12 +35,15 @@ right = False
 directions = []
 health = 100
 shoot = True
+bg = pygame.image.load("backgound.PNG")
+
 e1 = Enemy(800, 200)
 e2 = Enemy(800, 300)
 e3 = Enemy(800, 400)
 e4 = Enemy(100, 200)
 e5 = Enemy(100, 300)
 e6 = Enemy(100, 400)
+
 enemy_list = []
 enemy_list.extend((e1, e2, e3, e4, e5, e6))
 alive_list = []
@@ -47,8 +51,10 @@ alive_list.extend((True, True, True, True, True, True))
 move_time = 1
 shift_left = False
 shift_right = False
+
 # -------- Main Program Loop -----------
 while run:
+    screen.blit(bg, (39, 400))
 
     for proj in projectiles:
         for e in enemy_list:
@@ -116,7 +122,6 @@ while run:
 
         screen.blit(score_display, (0, 30))
 
-        screen.blit(display_message, (0, 15))
         screen.blit(f.image, f.rect)
 
 
@@ -143,7 +148,7 @@ while run:
         pygame.display.update()
     else:
         screen.fill((r, g, b))
-        screen.blit(display_message, (200, 200))
+        screen.blit(display_message, (370, 280))
         pygame.display.update()
 
 # Once we have exited the main program loop we can stop the game engine:
