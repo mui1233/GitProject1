@@ -1,6 +1,6 @@
 
 import pygame
-from fox import Fox
+from player import Player
 from projectile import Projectile
 from enemy import Enemy
 import time
@@ -24,7 +24,7 @@ b = 100
 # render the text for later
 display_message = big_font.render(message, True, (255, 255, 255))
 
-f = Fox(200, 60)
+f = Player(200, 60)
 score = 0
 # The loop will carry on until the user exits the game (e.g. clicks the close button).
 run = True
@@ -35,26 +35,26 @@ right = False
 directions = []
 health = 100
 shoot = True
+shots = 0
 bg = pygame.image.load("backgound.PNG")
 
-e1 = Enemy(800, 200)
+e1 = Enemy(800, 100)
 e2 = Enemy(800, 300)
-e3 = Enemy(800, 400)
-e4 = Enemy(100, 200)
-e5 = Enemy(100, 300)
-e6 = Enemy(100, 400)
+e3 = Enemy(800, 700)
+e4 = Enemy(100, 100)
+e5 = Enemy(100, 400)
+e6 = Enemy(100, 700)
 
 enemy_list = []
 enemy_list.extend((e1, e2, e3, e4, e5, e6))
 alive_list = []
 alive_list.extend((True, True, True, True, True, True))
 move_time = 1
-shift_left = False
-shift_right = False
+bg = pygame.image.load('backgound.PNG')  # Load the background image
+backg = pygame.transform.scale(bg, (1500, 800))
 
 # -------- Main Program Loop -----------
 while run:
-    screen.blit(bg, (39, 400))
 
     for proj in projectiles:
         for e in enemy_list:
@@ -80,28 +80,38 @@ while run:
     for event in pygame.event.get():  # User did something
         if event.type == pygame.QUIT:  # If user clicked close
             run = False
-        if event.type == pygame.MOUSEBUTTONUP and start_game == False:
-            start_game = True
-            message = "Click to play!"
-            message_display = my_font.render(message, True, (255, 255, 255))
-            start_time = time.time()
+
+
 
         if start_game:
             if event.type == pygame.MOUSEBUTTONUP:
 
-                proj = Projectile(f.x, f.y)
-                projectiles.append(proj)
-                blit_proj_list.append(True)
+
+                if f.current_direction == "left":
+                    proj = Projectile(f.x-10, f.y+42)
+                    projectiles.append(proj)
+                    blit_proj_list.append(True)
+
+                if f.current_direction == "right":
+                    proj = Projectile(f.x+90, f.y+45)
+                    projectiles.append(proj)
+                    blit_proj_list.append(True)
+
                 if f.current_direction == 'right':
                     right = True
                     directions.append(right)
                 elif f.current_direction == 'left':
                     right = False
                     directions.append(right)
+        if event.type == pygame.MOUSEBUTTONUP and start_game == False:
+            start_game = True
+            message = "Click to play!"
+            message_display = my_font.render(message, True, (255, 255, 255))
+            start_time = time.time()
 
 
     if start_game:
-        screen.fill((r, g, b))
+        screen.blit(backg, (0, 0))
 
         elapsed_time = time.time() - start_time
         elapsed_time //= 1
@@ -147,7 +157,7 @@ while run:
 
         pygame.display.update()
     else:
-        screen.fill((r, g, b))
+        screen.blit(backg, (0, 0))
         screen.blit(display_message, (370, 280))
         pygame.display.update()
 

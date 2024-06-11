@@ -7,7 +7,7 @@ class Projectile:
         self.image = pygame.image.load("projectle.png")
         self.image_size = self.image.get_size()
         self.rect = pygame.Rect(self.x, self.y, self.image_size[0], self.image_size[1])
-        self.delta = .2
+        self.delta = 1
 
     def move_right(self):
         self.x += self.delta
